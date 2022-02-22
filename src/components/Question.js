@@ -1,13 +1,32 @@
-import React, { useState } from "react";
+import { queryByTestId } from "@testing-library/react";
+import React, { useState, useEffect } from "react";
 
 function Question({ question, onAnswered }) {
   const [timeRemaining, setTimeRemaining] = useState(10);
 
   // add useEffect code
+  useEffect(() => {
+    const reverseTimeRemaining = setTimeout(() => {
+      setTimeRemaining(timeRemaining - 1)
+    }, 1000)
+
+    if (reverseTimeRemaining >= 0) {
+      return function() { 
+      clearTimeout(reverseTimeRemaining)
+      }
+    }
+  },[timeRemaining, question])
+
+  useEffect(() => {
+    setTimeout(() => {
+      onAnswered(false)
+    }, 10000);
+  }, [])
+
 
   function handleAnswer(isCorrect) {
     setTimeRemaining(10);
-    onAnswered(isCorrect);
+    onAnswered(false);
   }
 
   const { id, prompt, answers, correctIndex } = question;
